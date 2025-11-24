@@ -60,7 +60,7 @@ def add_record():
 
 @app.route('/')
 def home():
-    return "My Fitness Log - DB Initialized!"
+    return redirect('/add')
 
 
 if __name__ == '__main__':
