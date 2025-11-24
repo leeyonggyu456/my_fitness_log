@@ -6,7 +6,43 @@ app = Flask(__name__)
 
 DB_NAME = 'workout.db'
 
+# Step 4: 운동 기록 조회 기능
+@app.route('/list')
+def list_records():
+    conn = sqlite3.connect(DB_NAME)
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM Workout ORDER BY id DESC")
+    rows = cur.fetchall()
+    conn.close()
 
+    table = '''
+        <h2>운동 기록 목록</h2>
+        <table border="1" cellspacing="0" cellpadding="5">
+            <tr>
+                <th>ID</th>
+                <th>날짜</th>
+                <th>운동명</th>
+                <th>세트</th>
+                <th>반복</th>
+                <th>무게(kg)</th>
+            </tr>
+    '''
+
+    for r in rows:
+        table += f"""
+            <tr>
+                <td>{r[0]}</td>
+                <td>{r[1]}</td>
+                <td>{r[2]}</td>
+                <td>{r[3]}</td>
+                <td>{r[4]}</td>
+                <td>{r[5]}</td>
+            </tr>
+        """
+
+    table += "</table><br><a href='/'>홈으로</a> | <a href='/add'>운동 기록 추가</a>"
+
+    return table
 #DB 초기화 함수
 def init_db():
     conn = sqlite3.connect(DB_NAME)
