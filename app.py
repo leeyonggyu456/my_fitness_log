@@ -16,33 +16,80 @@ def list_records():
     conn.close()
 
     table = '''
-        <h2>운동 기록 목록</h2>
-        <table border="1" cellspacing="0" cellpadding="5">
-            <tr>
-                <th>ID</th>
-                <th>날짜</th>
-                <th>운동명</th>
-                <th>세트</th>
-                <th>반복</th>
-                <th>무게(kg)</th>
-            </tr>
+    <h2>운동 기록 목록</h2>
+    <table border="1" cellspacing="0" cellpadding="5">
+        <tr>
+            <th>ID</th>
+            <th>날짜</th>
+            <th>운동명</th>
+            <th>세트</th>
+            <th>반복</th>
+            <th>무게(kg)</th>
+            <th>수정</th>
+        </tr>
     '''
 
     for r in rows:
         table += f"""
-            <tr>
-                <td>{r[0]}</td>
-                <td>{r[1]}</td>
-                <td>{r[2]}</td>
-                <td>{r[3]}</td>
-                <td>{r[4]}</td>
-                <td>{r[5]}</td>
-            </tr>
-        """
+        <tr>
+            <td>{r[0]}</td>
+            <td>{r[1]}</td>
+            <td>{r[2]}</td>
+            <td>{r[3]}</td>
+            <td>{r[4]}</td>
+            <td>{r[5]}</td>
+            <td><a href="/edit/{r[0]}">수정</a></td>
+        </tr>
+    """
 
     table += "</table><br><a href='/'>홈으로</a> | <a href='/add'>운동 기록 추가</a>"
 
     return table
+
+# --------------------------
+# Step 5: 운동 기록 수정 기능
+# --------------------------
+@app.route('/edit/<int:record_id>', methods=['GET', 'POST'])
+def edit_record(record_id):
+    conn = sqlite3.connect(DB_NAME)
+    cur = conn.cursor()
+
+    if request.method == 'POST':
+        date = request.form['date']
+        exercise_name = request.form['exercise_name']
+        sets = request.form['sets']
+        reps = request.form['reps']
+        weight = request.form['weight']
+
+        cur.execute("""
+            UPDATE Workout
+            SET date = ?, exercise_name = ?, sets = ?, reps = ?, weight = ?
+            WHERE id = ?
+        """, (date, exercise_name, sets, reps, weight, record_id))
+        
+        conn.commit()
+        conn.close()
+        return redirect('/list')
+
+    # GET 방식: 기존 데이터 불러오기
+    cur.execute("SELECT * FROM Workout WHERE id = ?", (record_id,))
+    row = cur.fetchone()
+    conn.close()
+
+    return f'''
+        <h2>운동 기록 수정</h2>
+        <form method="post">
+            날짜: <input type="text" name="date" value="{row[1]}"><br>
+            운동명: <input type="text" name="exercise_name" value="{row[2]}"><br>
+            세트 수: <input type="number" name="sets" value="{row[3]}"><br>
+            반복 수: <input type="number" name="reps" value="{row[4]}"><br>
+            무게(kg): <input type="number" step="0.1" name="weight" value="{row[5]}"><br>
+            <input type="submit" value="저장">
+        </form>
+        <p><a href="/list">목록으로</a> | <a href="/">홈으로</a></p>
+    '''
+
+
 #DB 초기화 함수
 def init_db():
     conn = sqlite3.connect(DB_NAME)
