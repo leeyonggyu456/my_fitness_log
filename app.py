@@ -26,6 +26,7 @@ def list_records():
             <th>반복</th>
             <th>무게(kg)</th>
             <th>수정</th>
+            <th>삭제</th>
         </tr>
     '''
 
@@ -39,6 +40,8 @@ def list_records():
             <td>{r[4]}</td>
             <td>{r[5]}</td>
             <td><a href="/edit/{r[0]}">수정</a></td>
+            <td><a href="/delete/{r[0]}">삭제</a></td>
+            
         </tr>
     """
 
@@ -70,6 +73,20 @@ def edit_record(record_id):
         conn.commit()
         conn.close()
         return redirect('/list')
+
+# --------------------------
+# Step 6: 운동 기록 삭제 기능
+# --------------------------
+@app.route('/delete/<int:record_id>')
+def delete_record(record_id):
+    conn = sqlite3.connect(DB_NAME)
+    cur = conn.cursor()
+
+    cur.execute("DELETE FROM Workout WHERE id = ?", (record_id,))
+    conn.commit()
+    conn.close()
+
+    return redirect('/list')
 
     # GET 방식: 기존 데이터 불러오기
     cur.execute("SELECT * FROM Workout WHERE id = ?", (record_id,))
