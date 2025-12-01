@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, render_template
 import sqlite3
 import os
 
@@ -28,7 +28,7 @@ def init_db():
 
 
 # --------------------------
-# Step 3 & Step 7: 운동 기록 추가 페이지
+# 운동 기록 추가
 # --------------------------
 @app.route('/add', methods=['GET','POST'])
 def add_record():
@@ -50,25 +50,11 @@ def add_record():
 
         return redirect('/list')
     
-    return '''
-        <h2>운동 기록 추가</h2>
-        <form method="post">
-            날짜: <input type="text" name="date"><br>
-            운동명: <input type="text" name="exercise_name"><br>
-            세트 수: <input type="number" name="sets"><br>
-            반복 수: <input type="number" name="reps"><br>
-            무게(kg): <input type="number" step="0.1" name="weight"><br>
-            <input type="submit" value="저장">
-        </form>
-        <p>
-            <a href="/">홈으로</a> | 
-            <a href="/list">운동 기록 목록 보기</a>
-        </p>
-    '''
+    return render_template('add.html')
 
 
 # --------------------------
-# Step 4: 운동 기록 조회 기능
+# 운동 기록 조회
 # --------------------------
 @app.route('/list')
 def list_records():
@@ -78,42 +64,11 @@ def list_records():
     rows = cur.fetchall()
     conn.close()
 
-    table = '''
-        <h2>운동 기록 목록</h2>
-        <table border="1" cellspacing="0" cellpadding="5">
-            <tr>
-                <th>ID</th>
-                <th>날짜</th>
-                <th>운동명</th>
-                <th>세트</th>
-                <th>반복</th>
-                <th>무게(kg)</th>
-                <th>수정</th>
-                <th>삭제</th>
-            </tr>
-    '''
-
-    for r in rows:
-        table += f"""
-            <tr>
-                <td>{r[0]}</td>
-                <td>{r[1]}</td>
-                <td>{r[2]}</td>
-                <td>{r[3]}</td>
-                <td>{r[4]}</td>
-                <td>{r[5]}</td>
-                <td><a href="/edit/{r[0]}">수정</a></td>
-                <td><a href="/delete/{r[0]}">삭제</a></td>
-            </tr>
-        """
-
-    table += "</table><br><a href='/add'>운동 기록 추가</a> | <a href='/'>홈으로</a>"
-
-    return table
+    return render_template("list.html", rows=rows)
 
 
 # --------------------------
-# Step 5: 운동 기록 수정 기능
+# 운동 기록 수정
 # --------------------------
 @app.route('/edit/<int:record_id>', methods=['GET', 'POST'])
 def edit_record(record_id):
@@ -141,22 +96,11 @@ def edit_record(record_id):
     row = cur.fetchone()
     conn.close()
 
-    return f'''
-        <h2>운동 기록 수정</h2>
-        <form method="post">
-            날짜: <input type="text" name="date" value="{row[1]}"><br>
-            운동명: <input type="text" name="exercise_name" value="{row[2]}"><br>
-            세트 수: <input type="number" name="sets" value="{row[3]}"><br>
-            반복 수: <input type="number" name="reps" value="{row[4]}"><br>
-            무게(kg): <input type="number" step="0.1" name="weight" value="{row[5]}"><br>
-            <input type="submit" value="저장">
-        </form>
-        <p><a href="/list">목록으로</a> | <a href="/">홈으로</a></p>
-    '''
+    return render_template("edit.html", row=row)
 
 
 # --------------------------
-# Step 6: 운동 기록 삭제 기능
+# 운동 기록 삭제
 # --------------------------
 @app.route('/delete/<int:record_id>')
 def delete_record(record_id):
@@ -171,7 +115,7 @@ def delete_record(record_id):
 
 
 # --------------------------
-# 홈 화면 → 자동으로 /add 로 이동
+# 홈 → /add 로 이동
 # --------------------------
 @app.route('/')
 def home():

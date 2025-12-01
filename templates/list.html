@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h2>운동 기록 목록</h2>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>날짜</th>
+        <th>운동명</th>
+        <th>세트</th>
+        <th>반복</th>
+        <th>무게(kg)</th>
+        <th>수정</th>
+        <th>삭제</th>
+    </tr>
+
+    {% for r in rows %}
+    <tr>
+        <td>{{ r[0] }}</td>
+        <td>{{ r[1] }}</td>
+        <td>{{ r[2] }}</td>
+        <td>{{ r[3] }}</td>
+        <td>{{ r[4] }}</td>
+        <td>{{ r[5] }}</td>
+        <td><a href="/edit/{{ r[0] }}">수정</a></td>
+        <td><a href="/delete/{{ r[0] }}">삭제</a></td>
+    </tr>
+    {% endfor %}
+</table>
+
+<p>
+    <a href="/add">운동 기록 추가하기</a>
+</p>
+
+</body>
+</html>
