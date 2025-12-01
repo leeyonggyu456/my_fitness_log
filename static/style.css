@@ -1,27 +1,109 @@
+/* 전역 기본 스타일 */
 body {
-    font-family: Arial, sans-serif;
-    margin: 40px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f5f7fa;
+    margin: 0;
+    padding: 40px 0;
+    display: flex;
+    justify-content: center;
 }
 
+/* 중앙 레이아웃 */
 .container {
-    width: 400px;
-    margin: 0 auto;
+    width: 420px;
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
 }
 
+/* 제목 스타일 */
 h2 {
-    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 24px;
 }
 
-form input {
-    margin: 5px 0;
-    padding: 5px;
+/* 입력 폼 */
+form input[type="text"],
+form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 16px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    box-sizing: border-box;
 }
 
+/* 버튼 */
+input[type="submit"] {
+    width: 100%;
+    background-color: #4a90e2;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 6px;
+    transition: 0.2s;
+}
+
+input[type="submit"]:hover {
+    background-color: #357abd;
+}
+
+/* 링크 */
 a {
+    color: #4a90e2;
     text-decoration: none;
-    color: #0077cc;
+    font-size: 14px;
 }
 
 a:hover {
     text-decoration: underline;
+}
+
+/* 테이블 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th {
+    background-color: #4a90e2;
+    color: white;
+    padding: 10px;
+    font-weight: normal;
+}
+
+table td {
+    background-color: #fafafa;
+    padding: 10px 8px;
+    text-align: center;
+    border-bottom: 1px solid #e4e4e4;
+}
+
+table tr:hover td {
+    background-color: #f1f7ff;
+}
+
+/* 버튼형 링크 (수정/삭제) */
+.action-link {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.edit-btn {
+    background-color: #4a90e2;
+    color: white;
+}
+
+.delete-btn {
+    background-color: #e94e4e;
+    color: white;
 }
